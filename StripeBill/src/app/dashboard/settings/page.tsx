@@ -31,6 +31,7 @@ interface UserSettings {
   smartbillUsername: string | null
   fgoApiKey: string | null
   defaultVatRate: number | null
+  stripePricesIncludeVat: boolean | null
 }
 
 export default function SettingsPage() {
@@ -56,6 +57,7 @@ export default function SettingsPage() {
   const [smartbillUsername, setSmartbillUsername] = useState('')
   const [fgoApiKey, setFgoApiKey] = useState('')
   const [defaultVatRate, setDefaultVatRate] = useState(21)
+  const [stripePricesIncludeVat, setStripePricesIncludeVat] = useState(false)
   const [isTestingConnection, setIsTestingConnection] = useState(false)
 
   useEffect(() => {
@@ -89,6 +91,7 @@ export default function SettingsPage() {
         setSmartbillUsername(data.smartbillUsername || '')
         setFgoApiKey(data.fgoApiKey || '')
         setDefaultVatRate(data.defaultVatRate || 21)
+        setStripePricesIncludeVat(data.stripePricesIncludeVat || false)
       }
     } catch (error) {
       console.error('Error fetching settings:', error)
@@ -161,6 +164,7 @@ export default function SettingsPage() {
           companyAddress,
           bankAccount,
           defaultVatRate,
+          stripePricesIncludeVat,
         }),
       })
 
@@ -704,6 +708,39 @@ export default function SettingsPage() {
                   <p className="text-sm text-gray-500 mt-1">
                     <strong>IMPORTANT - De la 1 august 2025:</strong> Cotele 5% și 9% au fost ELIMINATE. Doar 0%, 11%, 21% sunt valide.
                   </p>
+                </div>
+
+                {/* Stripe TVA Setting */}
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Prețurile din Stripe includ deja TVA?
+                    </label>
+                    <input
+                      type="checkbox"
+                      checked={stripePricesIncludeVat}
+                      onChange={(e) => setStripePricesIncludeVat(e.target.checked)}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    ✅ <strong>Bifează dacă</strong> ai setat prețurile în Stripe cu TVA inclus (ex: €121 cu TVA 21% inclus)<br/>
+                    ❌ <strong>Nu bifa</strong> dacă prețurile din Stripe sunt fără TVA (ex: €100 + TVA separat)
+                  </p>
+                  {stripePricesIncludeVat && (
+                    <div className="mt-2 p-3 bg-blue-50 rounded-md">
+                      <p className="text-sm text-blue-800">
+                        <strong>Mod activat:</strong> Facturile vor afișa prețul din Stripe ca "cu TVA inclus". TVA-ul nu se adaugă suplimentar.
+                      </p>
+                    </div>
+                  )}
+                  {!stripePricesIncludeVat && (
+                    <div className="mt-2 p-3 bg-orange-50 rounded-md">
+                      <p className="text-sm text-orange-800">
+                        <strong>Mod activat:</strong> TVA-ul ({defaultVatRate}%) se va adăuga la prețul din Stripe pe factură.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <Button 

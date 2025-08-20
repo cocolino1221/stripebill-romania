@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
         smartbillUsername: true,
         fgoApiKey: true,
         defaultVatRate: true,
+        stripePricesIncludeVat: true,
       }
     })
 
@@ -61,6 +62,7 @@ export async function GET(req: NextRequest) {
           smartbillUsername: true,
           fgoApiKey: true,
           defaultVatRate: true,
+          stripePricesIncludeVat: true,
         }
       })
     }
@@ -101,6 +103,7 @@ export async function PATCH(req: NextRequest) {
       smartbillUsername,
       fgoApiKey,
       defaultVatRate,
+      stripePricesIncludeVat,
     } = body
 
     // Build update object based on provided fields
@@ -127,6 +130,7 @@ export async function PATCH(req: NextRequest) {
       }
       updateData.defaultVatRate = defaultVatRate
     }
+    if (stripePricesIncludeVat !== undefined) updateData.stripePricesIncludeVat = stripePricesIncludeVat
 
     const user = await prisma.user.update({
       where: { id: session.user.id },
@@ -148,6 +152,7 @@ export async function PATCH(req: NextRequest) {
         smartbillUsername: true,
         fgoApiKey: true,
         defaultVatRate: true,
+        stripePricesIncludeVat: true,
       }
     })
 

@@ -142,7 +142,7 @@ export class SmartBillAPI {
           currency: 'RON',
           quantity: product.quantity,
           price: product.price,
-          isTaxIncluded: false,
+          isTaxIncluded: false, // Prețul trimis la SmartBill este întotdeauna fără TVA
           taxName: 'TVA',
           taxPercentage: product.vatRate,
           isDiscount: false
@@ -263,6 +263,19 @@ export function extractInvoiceDataFromStripePayment(
   paymentIntent: any,
   userSettings: any
 ): SmartBillInvoiceData {
+  const totalAmountRON = convertStripeCentsToRON(paymentIntent.amount, paymentIntent.currency)
+  const vatRate = userSettings.defaultVatRate || 21
+  
+  // Calculează prețul fără TVA dacă Stripe are prețuri cu TVA inclus
+  let unitPrice: number
+  if (userSettings.stripePricesIncludeVat) {
+    // Prețul din Stripe include deja TVA - calculează prețul fără TVA
+    unitPrice = totalAmountRON / (1 + vatRate / 100)
+  } else {
+    // Prețul din Stripe este fără TVA - folosește direct
+    unitPrice = totalAmountRON
+  }
+
   return {
     // Date client (din Stripe)
     clientName: paymentIntent.shipping?.name || 'Client fără nume',
@@ -278,10 +291,12 @@ export function extractInvoiceDataFromStripePayment(
     // Produs/serviciu
     products: [{
       name: paymentIntent.description || 'Serviciu digital',
-      description: `Plată procesată prin Stripe - ${paymentIntent.id}`,
+      description: userSettings.stripePricesIncludeVat 
+        ? `Plată cu TVA inclus - Stripe ${paymentIntent.id}` 
+        : `Plată fără TVA - Stripe ${paymentIntent.id}`,
       quantity: 1,
-      price: convertStripeCentsToRON(paymentIntent.amount, paymentIntent.currency),
-      vatRate: userSettings.defaultVatRate || 21 // TVA configurabil: 0, 11, 21
+      price: unitPrice,
+      vatRate: vatRate
     }],
     
     // Date companie (ale utilizatorului)
