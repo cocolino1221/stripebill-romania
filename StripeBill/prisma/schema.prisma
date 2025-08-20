@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Stripe integration (versiune simplă fără Connect)
+  stripeAccountId String? // Stripe Account ID (manual)
+  stripeAccessToken String?
+  stripeConnectClientId String? // Client ID pentru Stripe Connect OAuth (opțional)
+  
+  // Date utilizator pentru identificare în webhook-uri
+  userWebhookToken String? // Token unic pentru identificarea utilizatorului în webhook-uri
+  
+  // Subscription & usage (pentru plănurile Pro - banii vin la tine)
+  stripeCustomerId String? // Customer ID din Stripe pentru abonamente
+  subscriptionId String? // Subscription ID activ
+  subscriptionStatus String? // active, canceled, incomplete, past_due
+  subscriptionPriceId String? // Price ID din Stripe (ex: price_1234 pentru Pro)
+  subscriptionCurrentPeriodEnd DateTime? // Când expiră abonamentul curent
+  freeInvoicesUsed Int @default(0)
+  
+  // Invoice provider settings
+  invoiceProvider String? // 'smartbill' or 'fgo'
+  smartbillApiKey String?
+  smartbillUsername String?
+  fgoApiKey String?
+  
+  // Invoice settings
+  invoiceSeries String?
+  companyName String?
+  companyVat String?
+  companyAddress String?
+  bankAccount String?
+  
+  accounts Account[]
+  sessions Session[]
+  invoices Invoice[]
+  
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+model Invoice {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Stripe data
+  stripePaymentId String @unique
+  stripeCustomerId String?
+  stripeAmount Int // amount in cents
+  stripeCurrency String @default("eur")
+  
+  // Customer data
+  customerName String?
+  customerEmail String?
+  customerAddress String?
+  customerVat String?
+  
+  // Invoice data
+  invoiceNumber String?
+  invoiceSeries String?
+  invoiceDate DateTime @default(now())
+  dueDate DateTime?
+  
+  // Product/Service data
+  description String
+  quantity Int @default(1)
+  unitPrice Int // in cents
+  vatRate Int @default(19) // VAT percentage
+  totalAmount Int // in cents
+  
+  // Provider data
+  providerInvoiceId String? // ID from SmartBill or FGO
+  providerInvoiceUrl String? // PDF URL from provider
+  pdfPath String? // Local PDF storage path
+  
+  // Status
+  status String @default("pending") // pending, generated, sent, failed
+  errorMessage String?
+  emailSent Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("invoices")
+}
+
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  stripeEventId String @unique
+  eventType String
+  processed Boolean @default(false)
+  error String?
+  
+  createdAt DateTime @default(now())
+  
+  @@map("webhook_events")
+}
