@@ -48,7 +48,7 @@ model User {
   companyVat String?
   companyAddress String?
   bankAccount String?
-  defaultVatRate Int @default(19) // TVA implicit: 0, 5, 9, 19
+  defaultVatRate Int @default(21) // TVA implicit: 0, 5, 11, 21 (actualizat august 2025)
   
   accounts Account[]
   sessions Session[]
@@ -123,7 +123,7 @@ model Invoice {
   description String
   quantity Int @default(1)
   unitPrice Int // in cents
-  vatRate Int @default(19) // VAT percentage
+  vatRate Int @default(21) // VAT percentage (actualizat august 2025)
   totalAmount Int // in cents
   
   // Provider data

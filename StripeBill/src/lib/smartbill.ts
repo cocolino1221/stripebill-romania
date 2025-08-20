@@ -25,7 +25,7 @@ interface SmartBillInvoiceData {
     description?: string
     quantity: number
     price: number // în lei (nu cent)
-    vatRate: number // TVA: 0, 5, 9, 19 (procente)
+    vatRate: number // TVA: 0, 5, 11, 21 (procente) - actualizat august 2025
   }>
   
   // Date companie (ale utilizatorului)
@@ -281,7 +281,7 @@ export function extractInvoiceDataFromStripePayment(
       description: `Plată procesată prin Stripe - ${paymentIntent.id}`,
       quantity: 1,
       price: convertStripeCentsToRON(paymentIntent.amount, paymentIntent.currency),
-      vatRate: userSettings.defaultVatRate || 19 // TVA configurabil: 0, 5, 9, 19
+      vatRate: userSettings.defaultVatRate || 21 // TVA configurabil: 0, 5, 11, 21
     }],
     
     // Date companie (ale utilizatorului)

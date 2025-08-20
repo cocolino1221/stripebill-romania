@@ -55,7 +55,7 @@ export default function SettingsPage() {
   const [smartbillApiKey, setSmartbillApiKey] = useState('')
   const [smartbillUsername, setSmartbillUsername] = useState('')
   const [fgoApiKey, setFgoApiKey] = useState('')
-  const [defaultVatRate, setDefaultVatRate] = useState(19)
+  const [defaultVatRate, setDefaultVatRate] = useState(21)
   const [isTestingConnection, setIsTestingConnection] = useState(false)
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function SettingsPage() {
         setSmartbillApiKey(data.smartbillApiKey || '')
         setSmartbillUsername(data.smartbillUsername || '')
         setFgoApiKey(data.fgoApiKey || '')
-        setDefaultVatRate(data.defaultVatRate || 19)
+        setDefaultVatRate(data.defaultVatRate || 21)
       }
     } catch (error) {
       console.error('Error fetching settings:', error)
@@ -699,11 +699,11 @@ export default function SettingsPage() {
                   >
                     <option value={0}>0% - Fără TVA (export, scutiri)</option>
                     <option value={5}>5% - TVA redus (cărți, medicamente)</option>
-                    <option value={9}>9% - TVA redus (cazare, restaurant)</option>
-                    <option value={19}>19% - TVA normal (majoritatea serviciilor)</option>
+                    <option value={11}>11% - TVA redus (cazare, restaurant) - NOU din august 2025</option>
+                    <option value={21}>21% - TVA normal (majoritatea serviciilor) - NOU din august 2025</option>
                   </select>
                   <p className="text-sm text-gray-500 mt-1">
-                    De la 1 august 2025 - vezi noi reglementări TVA România
+                    <strong>Actualizat 1 august 2025:</strong> TVA normal 19%→21%, TVA redus HoReCa 9%→11%
                   </p>
                 </div>
 

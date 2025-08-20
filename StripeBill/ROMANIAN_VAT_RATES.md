@@ -1,13 +1,17 @@
-# 🇷🇴 Cotele de TVA în România - Actualizate 2025
+# 🇷🇴 Cotele de TVA în România - Actualizate August 2025
+
+## 🚨 **IMPORTANT - Modificări din 1 August 2025:**
+- **TVA Normal: 19% → 21%** 
+- **TVA Redus HoReCa: 9% → 11%**
 
 ## 📊 Cotele de TVA Disponibile în StripeBill
 
-### ✅ Cote Implementate:
+### ✅ Cote Implementate (ACTUALIZATE):
 
 | **Cota TVA** | **Procent** | **Se aplică la** | **Folosire în StripeBill** |
 |--------------|-------------|------------------|---------------------------|
-| **TVA Normal** | **19%** | Majoritatea serviciilor și produselor | **Default pentru servicii digitale** |
-| **TVA Redus** | **9%** | Cazare, servicii restaurant, transport | **Pentru business-uri din HoReCa** |
+| **TVA Normal** | **21%** ⬆️ | Majoritatea serviciilor și produselor | **Default pentru servicii digitale** |
+| **TVA Redus** | **11%** ⬆️ | Cazare, servicii restaurant, transport | **Pentru business-uri din HoReCa** |
 | **TVA Redus** | **5%** | Cărți, ziare, medicamente, produse medicale | **Pentru business-uri specializate** |
 | **Fără TVA** | **0%** | Export, scutiri legale, anumite servicii | **Pentru export sau scutiri** |
 
@@ -16,12 +20,12 @@
 ## 🎯 Cum alegi cota TVA corectă
 
 ### Pentru **servicii digitale** (majoritatea utilizatorilor StripeBill):
-- ✅ **19% TVA Normal** - Default recomandat
+- ✅ **21% TVA Normal** - Default recomandat ⬆️ **CREȘTERE din august 2025**
 - Servicii de software, consultanță, marketing digital
 - Vânzări online, SaaS, aplicații mobile
 
 ### Pentru **business-uri HoReCa**:
-- ✅ **9% TVA Redus** - Cazare și restaurant
+- ✅ **11% TVA Redus** - Cazare și restaurant ⬆️ **CREȘTERE din august 2025**
 - Hoteluri, pensiuni, Airbnb
 - Restaurante, catering, servicii de masă
 
@@ -53,10 +57,12 @@
 
 ## 📅 Actualizări Legislative 2025
 
-### 🚨 **Important - Din 1 August 2025:**
-- **Noi reglementări** pentru serviciile digitale
-- **Verifică periodic** pentru actualizări TVA
-- **StripeBill se actualizează automat** conform legislației
+### 🚨 **APLICAT din 1 August 2025:**
+- **TVA Normal crescut la 21%** (era 19%)
+- **TVA Redus HoReCa crescut la 11%** (era 9%)
+- **TVA Redus 5%** rămâne neschimbat
+- **0% Export/Scutiri** rămâne neschimbat
+- **StripeBill ACTUALIZAT** conform noii legislații
 
 ### 🔍 Surse oficiale:
 - [ANAF - Codul Fiscal](https://www.anaf.ro)
@@ -71,7 +77,7 @@
 **A:** Da, poți schimba oricând în Setări → Date Companie. Schimbarea se aplică pentru facturile viitoare.
 
 ### **Q: Ce cotă TVA să aleg pentru SaaS/software?**
-**A:** 19% TVA Normal - este cota standard pentru servicii digitale în România.
+**A:** 21% TVA Normal - este noua cotă standard pentru servicii digitale în România (crescută din august 2025).
 
 ### **Q: Cum aflu dacă am dreptul la TVA redus?**
 **A:** Consultă un contabil sau verifică pe [ANAF.ro](https://www.anaf.ro) pentru categoria ta de business.
@@ -86,18 +92,18 @@
 
 ## 🧮 Exemple de Calcul TVA
 
-### Serviciu Digital €100 cu TVA 19%:
+### Serviciu Digital €100 cu TVA 21%:
 ```
 Valoare serviciu:  €100.00
-TVA (19%):         €19.00
-Total factură:     €119.00
+TVA (21%):         €21.00
+Total factură:     €121.00
 ```
 
-### Cazare €100 cu TVA 9%:
+### Cazare €100 cu TVA 11%:
 ```
 Valoare cazare:    €100.00  
-TVA (9%):          €9.00
-Total factură:     €109.00
+TVA (11%):         €11.00
+Total factură:     €111.00
 ```
 
 ### Export €100 cu TVA 0%:
