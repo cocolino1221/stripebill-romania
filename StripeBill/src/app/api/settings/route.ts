@@ -116,7 +116,17 @@ export async function PATCH(req: NextRequest) {
     if (smartbillApiKey !== undefined) updateData.smartbillApiKey = smartbillApiKey
     if (smartbillUsername !== undefined) updateData.smartbillUsername = smartbillUsername
     if (fgoApiKey !== undefined) updateData.fgoApiKey = fgoApiKey
-    if (defaultVatRate !== undefined) updateData.defaultVatRate = defaultVatRate
+    if (defaultVatRate !== undefined) {
+      // Validate VAT rate is legal (eliminated 5% and 9% from August 2025)
+      const validVatRates = [0, 11, 21]
+      if (!validVatRates.includes(defaultVatRate)) {
+        return NextResponse.json(
+          { message: `Cota TVA ${defaultVatRate}% nu este validă. Cotele legale din august 2025: 0%, 11%, 21%` },
+          { status: 400 }
+        )
+      }
+      updateData.defaultVatRate = defaultVatRate
+    }
 
     const user = await prisma.user.update({
       where: { id: session.user.id },

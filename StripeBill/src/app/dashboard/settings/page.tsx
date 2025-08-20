@@ -697,13 +697,12 @@ export default function SettingsPage() {
                     onChange={(e) => setDefaultVatRate(parseInt(e.target.value))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
-                    <option value={0}>0% - Fără TVA (export, scutiri)</option>
-                    <option value={5}>5% - TVA redus (cărți, medicamente)</option>
-                    <option value={11}>11% - TVA redus (cazare, restaurant) - NOU din august 2025</option>
-                    <option value={21}>21% - TVA normal (majoritatea serviciilor) - NOU din august 2025</option>
+                    <option value={0}>0% - Fără TVA (export, scutiri legale)</option>
+                    <option value={11}>11% - TVA redus (medicamente, alimente, cărți, energie, cazare, restaurant)</option>
+                    <option value={21}>21% - TVA standard (majoritatea serviciilor și produselor)</option>
                   </select>
                   <p className="text-sm text-gray-500 mt-1">
-                    <strong>Actualizat 1 august 2025:</strong> TVA normal 19%→21%, TVA redus HoReCa 9%→11%
+                    <strong>IMPORTANT - De la 1 august 2025:</strong> Cotele 5% și 9% au fost ELIMINATE. Doar 0%, 11%, 21% sunt valide.
                   </p>
                 </div>
 

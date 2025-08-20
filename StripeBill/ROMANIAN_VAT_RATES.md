@@ -1,96 +1,84 @@
-# 🇷🇴 Cotele de TVA în România - Actualizate August 2025
+# 🇷🇴 Cotele de TVA în România - Legislația Oficială August 2025
 
-## 🚨 **IMPORTANT - Modificări din 1 August 2025:**
-- **TVA Normal: 19% → 21%** 
-- **TVA Redus HoReCa: 9% → 11%**
+## 🚨 **SCHIMBĂRI MAJORE din 1 August 2025:**
+- **TVA Standard: 19% → 21%** 
+- **Cotele 5% și 9% au fost ELIMINATE complet**
+- **Cota redusă unică: 11%** (înlocuiește vechile 5% și 9%)
 
-## 📊 Cotele de TVA Disponibile în StripeBill
+## 📊 Cotele de TVA Valide din August 2025
 
-### ✅ Cote Implementate (ACTUALIZATE):
+### ✅ DOAR 3 Cote Legale:
 
-| **Cota TVA** | **Procent** | **Se aplică la** | **Folosire în StripeBill** |
-|--------------|-------------|------------------|---------------------------|
-| **TVA Normal** | **21%** ⬆️ | Majoritatea serviciilor și produselor | **Default pentru servicii digitale** |
-| **TVA Redus** | **11%** ⬆️ | Cazare, servicii restaurant, transport | **Pentru business-uri din HoReCa** |
-| **TVA Redus** | **5%** | Cărți, ziare, medicamente, produse medicale | **Pentru business-uri specializate** |
-| **Fără TVA** | **0%** | Export, scutiri legale, anumite servicii | **Pentru export sau scutiri** |
+| **Cota TVA** | **Procent** | **Se aplică la** | **Categoria** |
+|--------------|-------------|------------------|---------------|
+| **TVA Standard** | **21%** | Majoritatea serviciilor și produselor | **Default pentru business-uri** |
+| **TVA Redus** | **11%** | Medicamente, alimente, cărți, energie, cazare, restaurant | **Categorii speciale** |
+| **Fără TVA** | **0%** | Export, scutiri legale | **Export/Scutiri** |
 
 ---
 
-## 🎯 Cum alegi cota TVA corectă
+## 🎯 Care Cota TVA să Alegi?
 
-### Pentru **servicii digitale** (majoritatea utilizatorilor StripeBill):
-- ✅ **21% TVA Normal** - Default recomandat ⬆️ **CREȘTERE din august 2025**
-- Servicii de software, consultanță, marketing digital
-- Vânzări online, SaaS, aplicații mobile
+### **Pentru servicii digitale (SaaS, consultanță):**
+- ✅ **21% TVA Standard** - Majoritatea serviciilor
+- Software, aplicații, consultanță IT, marketing digital
+- Servicii profesionale, design, dezvoltare web
 
-### Pentru **business-uri HoReCa**:
-- ✅ **11% TVA Redus** - Cazare și restaurant ⬆️ **CREȘTERE din august 2025**
-- Hoteluri, pensiuni, Airbnb
-- Restaurante, catering, servicii de masă
+### **Pentru business-uri cu produse/servicii speciale:**
+- ✅ **11% TVA Redus** se aplică pentru:
+  - **Medicamente de uz uman**
+  - **Alimente și băuturi** (cu excepții)
+  - **Cărți, ziare, reviste** (fizice și electronice)
+  - **Energie termică, lemn de foc**
+  - **Cazare** (hoteluri, pensiuni, camping)
+  - **Servicii restaurant și catering** (fără alcool)
+  - **Accesul la muzee, castele, grădini zoologice**
 
-### Pentru **produse specializate**:
-- ✅ **5% TVA Redus** - Cărți și medicamente
-- Librării online, edituri
-- Farmacii online, produse medicale
+### **Pentru export sau scutiri legale:**
+- ✅ **0% Fără TVA**
+- Export către UE cu reverse charge
+- Export extra-UE
+- Scutiri prevăzute de lege
 
-### Pentru **export sau scutiri**:
-- ✅ **0% Fără TVA** - Export UE/extra-UE
-- Servicii către alte țări UE cu reverse charge
-- Scutiri legale (educație, sănătate, etc.)
+---
+
+## ⚖️ Legislația Oficială - Ce S-a Schimbat
+
+### **ELIMINATE din 1 august 2025:**
+- ❌ **Cota 5%** - nu mai există
+- ❌ **Cota 9%** - nu mai există
+
+### **CE ERA înainte vs CE E ACUM:**
+
+| **Categorie** | **Înainte (până 31 iulie)** | **ACUM (din 1 august)** |
+|---------------|---------------------------|------------------------|
+| Servicii digitale | 19% | **21%** |
+| Cazare/Restaurant | 9% | **11%** |
+| Medicamente (uman) | 9% | **11%** |
+| Cărți/Ziare | 5% | **11%** |
+| Lemn de foc | 5% | **11%** |
+| Energie termică | 5% | **11%** |
+| Medicamente veterinare | 9% | **ELIMINAT** - acum **21%** |
 
 ---
 
 ## 🔧 Configurare în StripeBill
 
-### PASUL 1: Setează TVA-ul implicit
+### PASUL 1: Alege cota corectă
 1. **Dashboard** → **Setări** → **Date Companie**
-2. **"TVA implicit pentru facturi"** - alege cota potrivită pentru business-ul tău
-3. **Salvează** - toate facturile viitoare vor folosi această cotă
+2. **"TVA implicit"** - doar 3 opțiuni valide:
+   - **0%** - Export/Scutiri
+   - **11%** - Categorii speciale (medicamente, alimente, cărți, cazare)
+   - **21%** - Standard (majoritatea serviciilor)
 
 ### PASUL 2: Verificare automată
-- ✅ StripeBill calculează **automat TVA-ul** pentru fiecare factură
-- ✅ **Conformitate legală** - toate facturile respectă legislația română
-- ✅ **SmartBill compliance** - integrare directă cu sistemul oficial
+- ✅ StripeBill respectă DOAR cotele legale (0%, 11%, 21%)
+- ✅ Facturile sunt conforme cu noua legislație
+- ✅ SmartBill calculează corect TVA-ul
 
 ---
 
-## 📅 Actualizări Legislative 2025
-
-### 🚨 **APLICAT din 1 August 2025:**
-- **TVA Normal crescut la 21%** (era 19%)
-- **TVA Redus HoReCa crescut la 11%** (era 9%)
-- **TVA Redus 5%** rămâne neschimbat
-- **0% Export/Scutiri** rămâne neschimbat
-- **StripeBill ACTUALIZAT** conform noii legislații
-
-### 🔍 Surse oficiale:
-- [ANAF - Codul Fiscal](https://www.anaf.ro)
-- [Legea 227/2015 - Codul Fiscal](https://www.anaf.ro/anaf/internet/ANAF/despre_anaf/strategii_anaf/strategii_anaf/Codul_fiscal)
-- [Directive UE privind TVA-ul](https://ec.europa.eu/taxation_customs/business/vat_ro)
-
----
-
-## ❓ Întrebări Frecvente
-
-### **Q: Pot schimba cota TVA după configurare?**
-**A:** Da, poți schimba oricând în Setări → Date Companie. Schimbarea se aplică pentru facturile viitoare.
-
-### **Q: Ce cotă TVA să aleg pentru SaaS/software?**
-**A:** 21% TVA Normal - este noua cotă standard pentru servicii digitale în România (crescută din august 2025).
-
-### **Q: Cum aflu dacă am dreptul la TVA redus?**
-**A:** Consultă un contabil sau verifică pe [ANAF.ro](https://www.anaf.ro) pentru categoria ta de business.
-
-### **Q: StripeBill calculează automat TVA-ul?**
-**A:** Da, pe baza cotei pe care o alegi, StripeBill calculează și afișează TVA-ul pe toate facturile.
-
-### **Q: Facturile sunt conforme cu legislația română?**
-**A:** Da, toate facturile generate respectă formatul legal româno și sunt conforme ANAF.
-
----
-
-## 🧮 Exemple de Calcul TVA
+## 🧮 Exemple de Calcul Noi
 
 ### Serviciu Digital €100 cu TVA 21%:
 ```
@@ -99,11 +87,18 @@ TVA (21%):         €21.00
 Total factură:     €121.00
 ```
 
-### Cazare €100 cu TVA 11%:
+### Cazare Hotel €100 cu TVA 11%:
 ```
 Valoare cazare:    €100.00  
 TVA (11%):         €11.00
 Total factură:     €111.00
+```
+
+### Medicamente €100 cu TVA 11%:
+```
+Valoare medicamente: €100.00  
+TVA (11%):           €11.00
+Total factură:       €111.00
 ```
 
 ### Export €100 cu TVA 0%:
@@ -115,25 +110,54 @@ Total factură:     €100.00
 
 ---
 
-## ⚡ Features StripeBill pentru TVA
+## ❓ Întrebări Frecvente
 
-### ✅ **Conformitate Automată:**
-- Calculul TVA corect pe toate facturile
-- Format legal român (conforme ANAF)  
-- Integrare directă cu SmartBill
+### **Q: Pot folosi încă 5% sau 9% TVA?**
+**A:** ❌ **NU!** Cotele 5% și 9% au fost ELIMINATE complet din 1 august 2025. Folosirea lor este ILEGALĂ.
 
-### ✅ **Flexibilitate Completă:**
-- Alegi orice cotă TVA (0%, 5%, 9%, 19%)
-- Schimbi cota oricând pentru facturile viitoare
-- Configurare per utilizator
+### **Q: Ce cotă pentru software/SaaS?**
+**A:** **21% TVA Standard** - este obligatoriu pentru servicii digitale.
 
-### ✅ **Transparență:**
-- TVA-ul se afișează clar pe factură
-- Clientul vede exact ce plătește
-- Conformitate cu directivele UE
+### **Q: Pentru restaurant ce cotă folosesc?**
+**A:** **11% TVA Redus** - pentru servicii de restaurant și catering (fără alcool).
+
+### **Q: Pentru medicamente?**
+**A:** **11% TVA Redus** - doar pentru medicamente de uz uman. Veterinare = 21%.
+
+### **Q: Ce risc dacă folosesc cote greșite?**
+**A:** Sancțiuni ANAF pentru nerespectarea legislației fiscale. Folosește doar 0%, 11%, 21%.
 
 ---
 
-**🇷🇴 StripeBill - Facturarea automată conform legislației românești!**
+## 🚨 AVERTISMENT Legal
 
-*Pentru întrebări specifice despre TVA, consultă un specialist contabil sau contactează ANAF.*
+### **Obligatoriu să respecti:**
+- ✅ Doar cotele 0%, 11%, 21% sunt LEGALE
+- ✅ 21% pentru majoritatea serviciilor
+- ✅ 11% doar pentru categoriile prevăzute în lege
+- ✅ 0% doar pentru export/scutiri
+
+### **INTERZIS să folosești:**
+- ❌ 5% - ELIMINAT din legislație
+- ❌ 9% - ELIMINAT din legislație
+- ❌ Orice altă cotă
+
+---
+
+## 📞 Surse Oficiale
+
+- [ANAF - Codul Fiscal](https://www.anaf.ro)
+- [Legea 227/2015 - Codul Fiscal](https://www.anaf.ro/anaf/internet/ANAF/despre_anaf/strategii_anaf/strategii_anaf/Codul_fiscal)
+- [Modificări TVA august 2025](https://www.anaf.ro)
+
+---
+
+## ✅ StripeBill - Conformitate Completă
+
+**🇷🇴 StripeBill respectă 100% noua legislație română:**
+- ❌ Cotele eliminate (5%, 9%) nu pot fi selectate
+- ✅ Doar cotele legale (0%, 11%, 21%) sunt disponibile
+- ✅ Calculul automat conform noilor reglementări
+- ✅ Facturile generate sunt conforme ANAF
+
+**Pentru întrebări fiscale specifice, consultă un contabil autorizat sau ANAF.**
