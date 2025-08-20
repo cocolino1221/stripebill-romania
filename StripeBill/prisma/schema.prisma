@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -48,6 +48,7 @@ model User {
   companyVat String?
   companyAddress String?
   bankAccount String?
+  defaultVatRate Int @default(19) // TVA implicit: 0, 5, 9, 19
   
   accounts Account[]
   sessions Session[]

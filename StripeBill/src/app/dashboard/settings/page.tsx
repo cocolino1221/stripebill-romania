@@ -30,6 +30,7 @@ interface UserSettings {
   smartbillApiKey: string | null
   smartbillUsername: string | null
   fgoApiKey: string | null
+  defaultVatRate: number | null
 }
 
 export default function SettingsPage() {
@@ -54,6 +55,7 @@ export default function SettingsPage() {
   const [smartbillApiKey, setSmartbillApiKey] = useState('')
   const [smartbillUsername, setSmartbillUsername] = useState('')
   const [fgoApiKey, setFgoApiKey] = useState('')
+  const [defaultVatRate, setDefaultVatRate] = useState(19)
   const [isTestingConnection, setIsTestingConnection] = useState(false)
 
   useEffect(() => {
@@ -86,6 +88,7 @@ export default function SettingsPage() {
         setSmartbillApiKey(data.smartbillApiKey || '')
         setSmartbillUsername(data.smartbillUsername || '')
         setFgoApiKey(data.fgoApiKey || '')
+        setDefaultVatRate(data.defaultVatRate || 19)
       }
     } catch (error) {
       console.error('Error fetching settings:', error)
@@ -157,6 +160,7 @@ export default function SettingsPage() {
           companyVat,
           companyAddress,
           bankAccount,
+          defaultVatRate,
         }),
       })
 
@@ -681,6 +685,26 @@ export default function SettingsPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                     placeholder="RO49AAAA1B31007593840000"
                   />
+                </div>
+
+                {/* VAT Rate Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    TVA implicit pentru facturi
+                  </label>
+                  <select
+                    value={defaultVatRate}
+                    onChange={(e) => setDefaultVatRate(parseInt(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  >
+                    <option value={0}>0% - Fără TVA (export, scutiri)</option>
+                    <option value={5}>5% - TVA redus (cărți, medicamente)</option>
+                    <option value={9}>9% - TVA redus (cazare, restaurant)</option>
+                    <option value={19}>19% - TVA normal (majoritatea serviciilor)</option>
+                  </select>
+                  <p className="text-sm text-gray-500 mt-1">
+                    De la 1 august 2025 - vezi noi reglementări TVA România
+                  </p>
                 </div>
 
                 <Button 

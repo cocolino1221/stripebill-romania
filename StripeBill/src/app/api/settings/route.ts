@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
         smartbillApiKey: true,
         smartbillUsername: true,
         fgoApiKey: true,
+        defaultVatRate: true,
       }
     })
 
@@ -59,6 +60,7 @@ export async function GET(req: NextRequest) {
           smartbillApiKey: true,
           smartbillUsername: true,
           fgoApiKey: true,
+          defaultVatRate: true,
         }
       })
     }
@@ -98,6 +100,7 @@ export async function PATCH(req: NextRequest) {
       smartbillApiKey,
       smartbillUsername,
       fgoApiKey,
+      defaultVatRate,
     } = body
 
     // Build update object based on provided fields
@@ -113,6 +116,7 @@ export async function PATCH(req: NextRequest) {
     if (smartbillApiKey !== undefined) updateData.smartbillApiKey = smartbillApiKey
     if (smartbillUsername !== undefined) updateData.smartbillUsername = smartbillUsername
     if (fgoApiKey !== undefined) updateData.fgoApiKey = fgoApiKey
+    if (defaultVatRate !== undefined) updateData.defaultVatRate = defaultVatRate
 
     const user = await prisma.user.update({
       where: { id: session.user.id },
@@ -133,6 +137,7 @@ export async function PATCH(req: NextRequest) {
         smartbillApiKey: true,
         smartbillUsername: true,
         fgoApiKey: true,
+        defaultVatRate: true,
       }
     })
 
