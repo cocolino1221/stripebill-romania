@@ -27,6 +27,31 @@ export async function GET(req: NextRequest) {
     })
 
     if (!user) {
+      // If user doesn't exist, create them (for OAuth users)
+      if (session.user.email) {
+        const newUser = await prisma.user.create({
+          data: {
+            email: session.user.email,
+            name: session.user.name || 'Utilizator',
+            // OAuth users don't need password
+          }
+        })
+        
+        return NextResponse.json({
+          user: {
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+            freeInvoicesUsed: newUser.freeInvoicesUsed,
+            stripeAccountId: newUser.stripeAccountId,
+            invoiceProvider: newUser.invoiceProvider,
+            subscriptionStatus: newUser.subscriptionStatus,
+            stripeCustomerId: newUser.stripeCustomerId,
+            subscriptionCurrentPeriodEnd: null,
+          },
+          invoices: []
+        })
+      }
       return NextResponse.json({ message: 'User not found' }, { status: 404 })
     }
 
