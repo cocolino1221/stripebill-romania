@@ -13,7 +13,7 @@ export default withAuth(
   }
 )
 
-// Protect all dashboard routes
+// Protect dashboard routes but exclude NextAuth API routes
 export const config = {
   matcher: [
     '/dashboard/:path*',
