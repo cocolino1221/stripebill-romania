@@ -14,12 +14,16 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<{[key: string]: string}>({})
+  const [successMessage, setSuccessMessage] = useState('')
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError('')
+    setFieldErrors({})
+    setSuccessMessage('')
 
     try {
       const response = await fetch('/api/auth/register', {
@@ -34,24 +38,40 @@ export default function RegisterPage() {
         }),
       })
 
-      if (response.ok) {
-        const result = await signIn('credentials', {
-          email,
-          password,
-          redirect: false,
-        })
+      const data = await response.json()
 
-        if (result?.error) {
-          setError('A apărut o eroare la autentificare')
-        } else {
-          router.push('/dashboard')
-        }
+      if (response.ok && data.success) {
+        setSuccessMessage(data.message)
+        
+        // Auto-login after successful registration
+        setTimeout(async () => {
+          const result = await signIn('credentials', {
+            email,
+            password,
+            redirect: false,
+          })
+
+          if (result?.error) {
+            setError('Contul a fost creat, dar autentificarea a eșuat. Încearcă să te autentifici manual.')
+          } else {
+            router.push('/dashboard')
+          }
+        }, 1500)
       } else {
-        const data = await response.json()
+        // Handle different error types
+        if (data.details) {
+          // Field-level errors
+          const newFieldErrors: {[key: string]: string} = {}
+          if (data.details.name) newFieldErrors.name = data.details.name
+          if (data.details.email) newFieldErrors.email = data.details.email
+          if (data.details.password) newFieldErrors.password = data.details.password
+          setFieldErrors(newFieldErrors)
+        }
+        
         setError(data.message || 'A apărut o eroare la înregistrare')
       }
     } catch (error) {
-      setError('A apărut o eroare. Încearcă din nou.')
+      setError('A apărut o eroare de conexiune. Verifică internetul și încearcă din nou.')
     } finally {
       setIsLoading(false)
     }
@@ -111,9 +131,25 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {successMessage && (
+            <div className="text-green-600 text-sm text-center bg-green-50 p-3 rounded border border-green-200">
+              <div className="flex items-center justify-center">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                {successMessage}
+              </div>
+            </div>
+          )}
+
           {error && (
-            <div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
-              {error}
+            <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded border border-red-200">
+              <div className="flex items-center justify-center">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {error}
+              </div>
             </div>
           )}
 
@@ -124,10 +160,15 @@ export default function RegisterPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                  fieldErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder="Nume complet"
                 required
               />
+              {fieldErrors.name && (
+                <p className="text-red-600 text-xs">{fieldErrors.name}</p>
+              )}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Email</label>
@@ -135,10 +176,15 @@ export default function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                  fieldErrors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder="email@example.com"
                 required
               />
+              {fieldErrors.email && (
+                <p className="text-red-600 text-xs">{fieldErrors.email}</p>
+              )}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Parola</label>
@@ -146,11 +192,17 @@ export default function RegisterPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                  fieldErrors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder="••••••••"
-                minLength={6}
+                minLength={8}
                 required
               />
+              {fieldErrors.password && (
+                <p className="text-red-600 text-xs">{fieldErrors.password}</p>
+              )}
+              <p className="text-xs text-gray-500">Minim 8 caractere</p>
             </div>
             <Button 
               type="submit" 
