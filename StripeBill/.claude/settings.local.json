@@ -17,7 +17,11 @@
       "Bash(git checkout:*)",
       "Bash(vercel:*)",
       "Bash(gh repo create:*)",
-      "Bash(git remote remove:*)"
+      "Bash(git remote remove:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": [],
