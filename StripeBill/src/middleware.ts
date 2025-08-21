@@ -3,12 +3,19 @@ import { NextResponse } from 'next/server'
 
 export default withAuth(
   function middleware(req) {
+    console.log('Middleware - token:', !!req.nextauth.token)
+    console.log('Middleware - path:', req.nextUrl.pathname)
+    
     // Allow the request to continue for authenticated users
     return NextResponse.next()
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token
+      authorized: ({ token, req }) => {
+        console.log('Authorized callback - token:', !!token)
+        console.log('Authorized callback - path:', req.nextUrl.pathname)
+        return !!token
+      }
     },
   }
 )

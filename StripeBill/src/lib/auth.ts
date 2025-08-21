@@ -6,7 +6,8 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Temporarily disable adapter for OAuth issues
+  // adapter: PrismaAdapter(prisma),
   providers: [
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
       GoogleProvider({
@@ -62,8 +63,35 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt'
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
+        // For OAuth providers, ensure user exists in our database
+        if (account && account.provider === 'google' && user.email) {
+          try {
+            let dbUser = await prisma.user.findUnique({
+              where: { email: user.email }
+            })
+            
+            if (!dbUser) {
+              dbUser = await prisma.user.create({
+                data: {
+                  email: user.email,
+                  name: user.name || 'Utilizator Google',
+                  image: user.image || null
+                }
+              })
+              console.log('Created Google user:', dbUser.email)
+            }
+            
+            return {
+              ...token,
+              id: dbUser.id,
+            }
+          } catch (error) {
+            console.error('Error handling Google user:', error)
+          }
+        }
+        
         return {
           ...token,
           id: user.id,
@@ -79,6 +107,22 @@ export const authOptions: NextAuthOptions = {
           id: token.id,
         }
       }
+    },
+    async redirect({ url, baseUrl }) {
+      console.log('NextAuth redirect callback - url:', url, 'baseUrl:', baseUrl)
+      // Redirect to dashboard after successful login
+      if (url.includes('/api/auth/signin') || url.includes('/auth/login')) {
+        return `${baseUrl}/dashboard`
+      }
+      // Allow relative callback URLs
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      }
+      // Allow callback URLs on the same origin
+      if (new URL(url).origin === baseUrl) {
+        return url
+      }
+      return baseUrl
     }
   },
   pages: {
