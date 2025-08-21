@@ -74,7 +74,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth/login',
-    signUp: '/auth/register',
   },
   // Vercel-specific configurations
   secret: process.env.NEXTAUTH_SECRET,

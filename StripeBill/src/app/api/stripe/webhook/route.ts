@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
           data: {
             subscriptionStatus: subscription.status,
             subscriptionPriceId: subscription.items.data[0]?.price.id,
-            subscriptionCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            subscriptionCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
           }
         })
 

@@ -175,7 +175,7 @@ export class SmartBillAPI {
           success: true,
           invoiceId: responseData.number,
           invoiceNumber: `${invoiceData.series}-${responseData.number}`,
-          pdfUrl
+          pdfUrl: pdfUrl || undefined
         }
       } else {
         return {

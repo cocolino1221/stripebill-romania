@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid plan' }, { status: 400 })
     }
 
-    const priceId = stripePrices[plan]
+    const priceId = stripePrices[plan as keyof typeof stripePrices]
     if (!priceId) {
       return NextResponse.json({ message: 'Price not configured' }, { status: 400 })
     }
