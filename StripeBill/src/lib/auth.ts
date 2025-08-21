@@ -64,6 +64,8 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
+      console.log('JWT callback - user:', user ? 'exists' : 'null', 'account:', account?.provider)
+      
       if (user) {
         // For OAuth providers, ensure user exists in our database
         if (account && account.provider === 'google' && user.email) {
@@ -80,31 +82,60 @@ export const authOptions: NextAuthOptions = {
                   image: user.image || null
                 }
               })
-              console.log('Created Google user:', dbUser.email)
+              console.log('Created Google user:', dbUser.email, 'ID:', dbUser.id)
+            } else {
+              console.log('Found existing Google user:', dbUser.email, 'ID:', dbUser.id)
             }
             
             return {
               ...token,
               id: dbUser.id,
+              email: user.email,
             }
           } catch (error) {
             console.error('Error handling Google user:', error)
+            return {
+              ...token,
+              id: user.id || 'temp-id',
+              email: user.email,
+            }
           }
         }
         
         return {
           ...token,
           id: user.id,
+          email: user.email,
         }
       }
+      
+      // For existing sessions, try to get user ID from database if missing
+      if (token.email && !token.id) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email as string }
+          })
+          if (dbUser) {
+            token.id = dbUser.id
+            console.log('Found user ID for existing session:', dbUser.id)
+          }
+        } catch (error) {
+          console.error('Error finding user in JWT callback:', error)
+        }
+      }
+      
+      console.log('JWT callback final token ID:', token.id)
       return token
     },
     async session({ session, token }) {
+      console.log('Session callback - token ID:', token.id, 'email:', token.email)
+      
       return {
         ...session,
         user: {
           ...session.user,
-          id: token.id,
+          id: token.id as string,
+          email: token.email as string,
         }
       }
     },

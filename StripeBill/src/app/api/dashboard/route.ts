@@ -7,12 +7,36 @@ export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session?.user?.id) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    console.log('Dashboard API - session:', session ? 'exists' : 'null')
+    console.log('Dashboard API - user ID:', session?.user?.id)
+    console.log('Dashboard API - user email:', session?.user?.email)
+    
+    if (!session?.user) {
+      return NextResponse.json({ message: 'No session found' }, { status: 401 })
+    }
+    
+    // If we don't have user ID but we have email, try to find user
+    let userId = session.user.id
+    if (!userId && session.user.email) {
+      try {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: session.user.email }
+        })
+        if (dbUser) {
+          userId = dbUser.id
+          console.log('Found user by email:', userId)
+        }
+      } catch (error) {
+        console.error('Error finding user by email:', error)
+      }
+    }
+    
+    if (!userId) {
+      return NextResponse.json({ message: 'User ID not found' }, { status: 401 })
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: userId },
       select: {
         id: true,
         name: true,
@@ -56,7 +80,7 @@ export async function GET(req: NextRequest) {
     }
 
     const invoices = await prisma.invoice.findMany({
-      where: { userId: session.user.id },
+      where: { userId: userId },
       select: {
         id: true,
         invoiceNumber: true,
