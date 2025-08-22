@@ -7,32 +7,51 @@ export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
-    console.log('Dashboard API - session:', session ? 'exists' : 'null')
-    console.log('Dashboard API - user ID:', session?.user?.id)
-    console.log('Dashboard API - user email:', session?.user?.email)
+    console.log('Dashboard API - session exists:', !!session)
+    console.log('Dashboard API - user exists:', !!session?.user)
+    console.log('Dashboard API - user ID:', session?.user?.id || 'missing')
+    console.log('Dashboard API - user email:', session?.user?.email || 'missing')
     
     if (!session?.user) {
-      return NextResponse.json({ message: 'No session found' }, { status: 401 })
+      console.log('Dashboard API - No session or user found')
+      return NextResponse.json({ 
+        message: 'No session found',
+        debug: {
+          hasSession: !!session,
+          hasUser: !!session?.user
+        }
+      }, { status: 401 })
     }
     
     // If we don't have user ID but we have email, try to find user
     let userId = session.user.id
     if (!userId && session.user.email) {
+      console.log('Dashboard API - Trying to find user by email:', session.user.email)
       try {
         const dbUser = await prisma.user.findUnique({
           where: { email: session.user.email }
         })
         if (dbUser) {
           userId = dbUser.id
-          console.log('Found user by email:', userId)
+          console.log('Dashboard API - Found user by email:', userId)
+        } else {
+          console.log('Dashboard API - No user found with email:', session.user.email)
         }
       } catch (error) {
-        console.error('Error finding user by email:', error)
+        console.error('Dashboard API - Error finding user by email:', error)
+        // Continue without failing, we'll create user below
       }
     }
     
     if (!userId) {
-      return NextResponse.json({ message: 'User ID not found' }, { status: 401 })
+      console.log('Dashboard API - No user ID available, cannot proceed')
+      return NextResponse.json({ 
+        message: 'User ID not found',
+        debug: {
+          sessionUserId: session?.user?.id || 'missing',
+          sessionUserEmail: session?.user?.email || 'missing'
+        }
+      }, { status: 401 })
     }
 
     const user = await prisma.user.findUnique({
@@ -105,8 +124,23 @@ export async function GET(req: NextRequest) {
     })
   } catch (error) {
     console.error('Dashboard API error:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    
+    // Try to provide more specific error information
+    let errorMessage = 'Internal server error'
+    let errorDetails = 'Unknown error'
+    
+    if (error instanceof Error) {
+      errorMessage = error.message
+      errorDetails = error.stack || error.message
+    }
+    
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { 
+        message: errorMessage,
+        details: errorDetails,
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     )
   }

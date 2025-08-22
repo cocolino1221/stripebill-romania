@@ -96,13 +96,18 @@ export async function POST(req: NextRequest) {
     )
   } catch (error: any) {
     console.error('Register error:', error)
+    console.error('Register error code:', error.code)
+    console.error('Register error message:', error.message)
+    console.error('Register error stack:', error.stack)
 
     // Database connection errors
     if (error.code === 'P1001') {
       return NextResponse.json(
         { 
           error: 'DATABASE_CONNECTION',
-          message: 'Eroare de conexiune la baza de date. Încearcă din nou.' 
+          message: 'Eroare de conexiune la baza de date. Încearcă din nou.',
+          details: error.message,
+          code: error.code
         },
         { status: 503 }
       )
@@ -113,9 +118,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { 
           error: 'USER_EXISTS',
-          message: 'Un utilizator cu acest email există deja' 
+          message: 'Un utilizator cu acest email există deja',
+          details: error.message,
+          code: error.code
         },
         { status: 409 }
+      )
+    }
+
+    // Other Prisma errors
+    if (error.code && error.code.startsWith('P')) {
+      return NextResponse.json(
+        { 
+          error: 'DATABASE_ERROR',
+          message: 'Eroare de bază de date. Încearcă din nou.',
+          details: error.message,
+          code: error.code
+        },
+        { status: 500 }
       )
     }
 
@@ -123,7 +143,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { 
         error: 'REGISTRATION_FAILED',
-        message: 'A apărut o eroare la înregistrare. Încearcă din nou.' 
+        message: 'A apărut o eroare la înregistrare. Încearcă din nou.',
+        details: error.message,
+        timestamp: new Date().toISOString()
       },
       { status: 500 }
     )
