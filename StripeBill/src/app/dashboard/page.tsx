@@ -64,9 +64,43 @@ export default function DashboardPage() {
         console.error('Dashboard API error:', response.status, response.statusText)
         const errorData = await response.json().catch(() => ({}))
         console.error('Error details:', errorData)
+        
+        // Fallback: create minimal user data from session
+        if (session?.user) {
+          console.log('Using fallback user data from session')
+          setUserData({
+            id: session.user.id || 'temp-id',
+            name: session.user.name || 'Utilizator',
+            email: session.user.email || '',
+            freeInvoicesUsed: 0,
+            stripeAccountId: null,
+            invoiceProvider: null,
+            subscriptionStatus: null,
+            stripeCustomerId: null,
+            subscriptionCurrentPeriodEnd: null,
+          })
+          setInvoices([])
+        }
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
+      
+      // Fallback: create minimal user data from session
+      if (session?.user) {
+        console.log('Using fallback user data from session due to fetch error')
+        setUserData({
+          id: session.user.id || 'temp-id',
+          name: session.user.name || 'Utilizator',
+          email: session.user.email || '',
+          freeInvoicesUsed: 0,
+          stripeAccountId: null,
+          invoiceProvider: null,
+          subscriptionStatus: null,
+          stripeCustomerId: null,
+          subscriptionCurrentPeriodEnd: null,
+        })
+        setInvoices([])
+      }
     } finally {
       setIsLoading(false)
     }
@@ -94,12 +128,31 @@ export default function DashboardPage() {
   if (!userData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-md">
           <h2 className="text-xl font-semibold mb-2">Eroare la încărcarea datelor</h2>
           <p className="text-gray-600 mb-4">Nu s-au putut încărca datele utilizatorului.</p>
-          <Button onClick={() => window.location.reload()} variant="outline">
-            Încearcă din nou
-          </Button>
+          
+          {process.env.NODE_ENV === 'development' && session?.user && (
+            <div className="mb-4 p-3 bg-gray-100 rounded text-sm text-left">
+              <p><strong>Debug info:</strong></p>
+              <p>User ID: {session.user.id || 'missing'}</p>
+              <p>Email: {session.user.email || 'missing'}</p>
+              <p>Name: {session.user.name || 'missing'}</p>
+            </div>
+          )}
+          
+          <div className="space-y-2">
+            <Button onClick={() => window.location.reload()} variant="outline" className="w-full">
+              Încearcă din nou
+            </Button>
+            <Button 
+              onClick={() => window.open('/api/debug/session', '_blank')} 
+              variant="ghost" 
+              className="w-full text-xs"
+            >
+              Debug Session (Dev)
+            </Button>
+          </div>
         </div>
       </div>
     )
