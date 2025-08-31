@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Obține Client ID-ul din baza de date
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: session.user.id },
       select: { stripeConnectClientId: true }
     })

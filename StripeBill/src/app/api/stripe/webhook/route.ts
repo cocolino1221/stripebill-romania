@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { SmartBillAPI, extractInvoiceDataFromStripePayment } from '@/lib/smartbill'
 import Stripe from 'stripe'
+import crypto from 'crypto'
 
 // Funcție pentru generarea facturii în SmartBill
 async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, user: any) {
@@ -22,8 +23,9 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
 
     if (result.success) {
       // Salvează factura în database
-      const invoice = await prisma.invoice.create({
+      const invoice = await prisma.invoices.create({
         data: {
+          id: crypto.randomUUID(),
           userId: user.id,
           stripePaymentId: paymentIntent.id,
           stripeCustomerId: paymentIntent.customer as string || null,
@@ -42,6 +44,7 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
           quantity: invoiceData.products[0].quantity,
           unitPrice: Math.round(invoiceData.products[0].price * 100), // convertește în cents
           totalAmount: paymentIntent.amount,
+          updatedAt: new Date(),
           
           // Provider data
           providerInvoiceId: result.invoiceId || null,
@@ -52,7 +55,7 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
 
       // Actualizează contorul de facturi gratuite
       if (user.subscriptionStatus !== 'active') {
-        await prisma.user.update({
+        await prisma.users.update({
           where: { id: user.id },
           data: { freeInvoicesUsed: { increment: 1 } }
         })
@@ -67,7 +70,7 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
         )
 
         // Actualizează statusul email
-        await prisma.invoice.update({
+        await prisma.invoices.update({
           where: { id: invoice.id },
           data: { 
             emailSent,
@@ -79,8 +82,9 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
       console.log(`✅ Invoice generated successfully: ${result.invoiceNumber} for user ${user.id}`)
     } else {
       // Salvează eroarea în database
-      await prisma.invoice.create({
+      await prisma.invoices.create({
         data: {
+          id: crypto.randomUUID(),
           userId: user.id,
           stripePaymentId: paymentIntent.id,
           stripeAmount: paymentIntent.amount,
@@ -90,7 +94,8 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
           unitPrice: paymentIntent.amount,
           totalAmount: paymentIntent.amount,
           status: 'failed',
-          errorMessage: result.error
+          errorMessage: result.error,
+          updatedAt: new Date()
         }
       })
 
@@ -135,7 +140,7 @@ export async function POST(req: NextRequest) {
           const subscriptionId = session.subscription as string
 
           // Actualizează utilizatorul cu datele abonamentului
-          await prisma.user.update({
+          await prisma.users.update({
             where: { id: userId },
             data: {
               stripeCustomerId: customerId,
@@ -154,7 +159,7 @@ export async function POST(req: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription
         const customerId = subscription.customer as string
 
-        await prisma.user.updateMany({
+        await prisma.users.updateMany({
           where: { stripeCustomerId: customerId },
           data: {
             subscriptionStatus: subscription.status,
@@ -172,7 +177,7 @@ export async function POST(req: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription
         const customerId = subscription.customer as string
 
-        await prisma.user.updateMany({
+        await prisma.users.updateMany({
           where: { stripeCustomerId: customerId },
           data: {
             subscriptionStatus: 'canceled',
@@ -190,7 +195,7 @@ export async function POST(req: NextRequest) {
         const invoice = event.data.object as Stripe.Invoice
         const customerId = invoice.customer as string
 
-        await prisma.user.updateMany({
+        await prisma.users.updateMany({
           where: { stripeCustomerId: customerId },
           data: {
             subscriptionStatus: 'past_due',
@@ -211,7 +216,7 @@ export async function POST(req: NextRequest) {
           
           try {
             // Găsește utilizatorul cu stripeAccountId = event.account
-            const user = await prisma.user.findFirst({
+            const user = await prisma.users.findFirst({
               where: { stripeAccountId: event.account },
               select: {
                 id: true,

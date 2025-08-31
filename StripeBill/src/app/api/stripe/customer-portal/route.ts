@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Găsește utilizatorul cu Stripe Customer ID
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: session.user.id },
       select: { stripeCustomerId: true }
     })

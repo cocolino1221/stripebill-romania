@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
-    let user = await prisma.user.findUnique({
+    let user = await prisma.users.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
     // Generează webhook token dacă nu există
     if (!user.userWebhookToken) {
       const webhookToken = randomBytes(32).toString('hex')
-      user = await prisma.user.update({
+      user = await prisma.users.update({
         where: { id: session.user.id },
         data: { userWebhookToken: webhookToken },
         select: {
@@ -132,7 +132,7 @@ export async function PATCH(req: NextRequest) {
     }
     if (stripePricesIncludeVat !== undefined) updateData.stripePricesIncludeVat = stripePricesIncludeVat
 
-    const user = await prisma.user.update({
+    const user = await prisma.users.update({
       where: { id: session.user.id },
       data: updateData,
       select: {

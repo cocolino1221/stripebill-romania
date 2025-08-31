@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { SmartBillAPI, extractInvoiceDataFromStripePayment } from '@/lib/smartbill'
 import Stripe from 'stripe'
+import crypto from 'crypto'
 
 // Webhook simplu fără Stripe Connect - utilizatorul configurează manual webhook-ul
 export async function POST(req: NextRequest) {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
 
   try {
     // Găsește utilizatorul pe baza token-ului
-    const user = await prisma.user.findFirst({
+    const user = await prisma.users.findFirst({
       where: { userWebhookToken: userToken },
       select: {
         id: true,
@@ -85,8 +86,9 @@ export async function POST(req: NextRequest) {
         console.error(`User ${user.id} missing invoice provider configuration`)
         
         // Salvează plata ca pending pentru configurare ulterioară
-        await prisma.invoice.create({
+        await prisma.invoices.create({
           data: {
+            id: crypto.randomUUID(),
             userId: user.id,
             stripePaymentId: paymentIntent.id,
             stripeAmount: paymentIntent.amount,
@@ -96,7 +98,8 @@ export async function POST(req: NextRequest) {
             unitPrice: paymentIntent.amount,
             totalAmount: paymentIntent.amount,
             status: 'pending',
-            errorMessage: 'Furnizorul de facturi nu este configurat'
+            errorMessage: 'Furnizorul de facturi nu este configurat',
+            updatedAt: new Date()
           }
         })
       }
@@ -126,8 +129,9 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
 
     if (result.success) {
       // Salvează factura în database
-      const invoice = await prisma.invoice.create({
+      const invoice = await prisma.invoices.create({
         data: {
+          id: crypto.randomUUID(),
           userId: user.id,
           stripePaymentId: paymentIntent.id,
           stripeCustomerId: paymentIntent.customer as string || null,
@@ -151,12 +155,13 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
           providerInvoiceId: result.invoiceId || null,
           providerInvoiceUrl: result.pdfUrl || null,
           status: 'generated',
+          updatedAt: new Date(),
         }
       })
 
       // Actualizează contorul de facturi gratuite
       if (user.subscriptionStatus !== 'active') {
-        await prisma.user.update({
+        await prisma.users.update({
           where: { id: user.id },
           data: { freeInvoicesUsed: { increment: 1 } }
         })
@@ -171,7 +176,7 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
         )
 
         // Actualizează statusul email
-        await prisma.invoice.update({
+        await prisma.invoices.update({
           where: { id: invoice.id },
           data: { 
             emailSent,
@@ -183,8 +188,9 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
       console.log(`✅ Invoice generated successfully: ${result.invoiceNumber} for user ${user.id}`)
     } else {
       // Salvează eroarea în database
-      await prisma.invoice.create({
+      await prisma.invoices.create({
         data: {
+          id: crypto.randomUUID(),
           userId: user.id,
           stripePaymentId: paymentIntent.id,
           stripeAmount: paymentIntent.amount,
@@ -194,7 +200,8 @@ async function generateSmartBillInvoice(paymentIntent: Stripe.PaymentIntent, use
           unitPrice: paymentIntent.amount,
           totalAmount: paymentIntent.amount,
           status: 'failed',
-          errorMessage: result.error
+          errorMessage: result.error,
+          updatedAt: new Date()
         }
       })
 

@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -27,7 +28,7 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
-          const user = await prisma.user.findUnique({
+          const user = await prisma.users.findUnique({
             where: {
               email: credentials.email.toLowerCase()
             }
@@ -69,16 +70,19 @@ export const authOptions: NextAuthOptions = {
         // For OAuth providers, ensure user exists in our database
         if (account && account.provider === 'google' && user.email) {
           try {
-            let dbUser = await prisma.user.findUnique({
+            let dbUser = await prisma.users.findUnique({
               where: { email: user.email }
             })
             
             if (!dbUser) {
-              dbUser = await prisma.user.create({
+              dbUser = await prisma.users.create({
                 data: {
+                  id: crypto.randomUUID(),
                   email: user.email,
                   name: user.name || 'Utilizator Google',
-                  image: user.image || null
+                  image: user.image || null,
+                  createdAt: new Date(),
+                  updatedAt: new Date()
                 }
               })
               console.log('Created Google user:', dbUser.email, 'ID:', dbUser.id)
@@ -111,7 +115,7 @@ export const authOptions: NextAuthOptions = {
       // For existing sessions, try to get user ID from database if missing
       if (token.email && !token.id) {
         try {
-          const dbUser = await prisma.user.findUnique({
+          const dbUser = await prisma.users.findUnique({
             where: { email: token.email as string }
           })
           if (dbUser) {

@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const result = await prisma.$queryRaw`SELECT 1 as test`
     
     // Test user table access
-    const userCount = await prisma.user.count()
+    const userCount = await prisma.users.count()
     
     return NextResponse.json({
       status: 'Database connection working',

@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     }
 
     const [invoices, totalCount] = await Promise.all([
-      prisma.invoice.findMany({
+      prisma.invoices.findMany({
         where,
         select: {
           id: true,
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
         skip,
         take: limit,
       }),
-      prisma.invoice.count({ where })
+      prisma.invoices.count({ where })
     ])
 
     return NextResponse.json({
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
-    const invoices = await prisma.invoice.findMany({
+    const invoices = await prisma.invoices.findMany({
       where: { userId: session.user.id },
       select: {
         id: true,

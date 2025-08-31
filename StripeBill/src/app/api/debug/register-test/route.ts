@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(req: NextRequest) {
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
     console.log('Database connection test:', testQuery)
     
     // Test user table access
-    const userCount = await prisma.user.count()
+    const userCount = await prisma.users.count()
     console.log('Current user count:', userCount)
     
     // Parse request body
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     
     // Check for existing user
     console.log('Checking for existing user...')
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.users.findUnique({
       where: { email: email.toLowerCase() }
     })
     console.log('Existing user found:', !!existingUser)
@@ -48,11 +49,14 @@ export async function POST(req: NextRequest) {
     
     // Create user
     console.log('Creating user in database...')
-    const user = await prisma.user.create({
+    const user = await prisma.users.create({
       data: {
+        id: crypto.randomUUID(),
         name: name.trim(),
         email: email.toLowerCase(),
         password: hashedPassword,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     })
     console.log('User created successfully:', { id: user.id, email: user.email })

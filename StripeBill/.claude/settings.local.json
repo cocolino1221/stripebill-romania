@@ -29,7 +29,10 @@
       "Bash(DATABASE_URL=\"postgresql://postgres:Primafisoftpristavita1@db.srpricztcvjsrgdhjoah.supabase.co:5432/postgres\" npx prisma migrate dev --name init)",
       "Bash(DATABASE_URL=\"postgresql://postgres:Primafisoftpristavita1@db.srpricztcvjsrgdhjoah.supabase.co:5432/postgres\" npx prisma studio)",
       "Bash(DATABASE_URL=\"postgresql://postgres:Primafisoftpristavita1@db.srpricztcvjsrgdhjoah.supabase.co:5432/postgres\" npx prisma db pull --force)",
-      "WebFetch(domain:stripebill-romania-ynf1.vercel.app)"
+      "WebFetch(domain:stripebill-romania-ynf1.vercel.app)",
+      "Bash(find:*)",
+      "Bash(npx tsc:*)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "ask": [],

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import crypto from 'crypto'
 
 export async function GET(req: NextRequest) {
   try {
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
     if (!userId && session.user.email) {
       console.log('Dashboard API - Trying to find user by email:', session.user.email)
       try {
-        const dbUser = await prisma.user.findUnique({
+        const dbUser = await prisma.users.findUnique({
           where: { email: session.user.email }
         })
         if (dbUser) {
@@ -54,7 +55,7 @@ export async function GET(req: NextRequest) {
       }, { status: 401 })
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: userId },
       select: {
         id: true,
@@ -72,10 +73,13 @@ export async function GET(req: NextRequest) {
     if (!user) {
       // If user doesn't exist, create them (for OAuth users)
       if (session.user.email) {
-        const newUser = await prisma.user.create({
+        const newUser = await prisma.users.create({
           data: {
+            id: crypto.randomUUID(),
             email: session.user.email,
             name: session.user.name || 'Utilizator',
+            createdAt: new Date(),
+            updatedAt: new Date(),
             // OAuth users don't need password
           }
         })
@@ -98,7 +102,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 })
     }
 
-    const invoices = await prisma.invoice.findMany({
+    const invoices = await prisma.invoices.findMany({
       where: { userId: userId },
       select: {
         id: true,

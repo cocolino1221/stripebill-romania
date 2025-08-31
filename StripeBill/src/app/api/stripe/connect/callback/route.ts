@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     const { stripe_user_id, access_token } = tokenData
 
     // Salvează datele în database
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: state },
       data: {
         stripeAccountId: stripe_user_id,
