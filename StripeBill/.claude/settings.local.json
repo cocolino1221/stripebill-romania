@@ -32,7 +32,8 @@
       "WebFetch(domain:stripebill-romania-ynf1.vercel.app)",
       "Bash(find:*)",
       "Bash(npx tsc:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "WebFetch(domain:stripebill-romania-wiqn.vercel.app)"
     ],
     "deny": [],
     "ask": [],
